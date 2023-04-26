@@ -77,6 +77,9 @@ int main() {
 	VBO1.Unbind();
 	EBO1.Unbind();
 
+	// Create a reference to the uniform variable "scale" in the shader program
+	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
+
 	// Terminate the function only on closing the window
 	while (!glfwWindowShouldClose(window)) {
 		//Clean the background
@@ -85,6 +88,9 @@ int main() {
 
 		// Enable the shader program
 		shaderProgram.Activate();
+
+		// Set the uniform variable "scale" to 0.5
+		glUniform1f(uniID, 0.5f);
 
 		// Bind the vertex array (unnecessary since we have only one object but hey)
 		VAO1.Bind();
