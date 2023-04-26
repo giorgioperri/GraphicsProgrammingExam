@@ -2,21 +2,30 @@
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
 
-// Vertex Shader source code
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
+#include "shaderClass.h"
+#include "VAO.h"
+#include "VBO.h"
+#include "EBO.h"
 
-//Fragment Shader source code
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(0.8f, 0.3f, 0.02f, 1.0f);\n"
-"}\n\0";
+
+// Just an array of vertex positions 
+GLfloat vertices[] = {
+//        COORDINATES                               COLORS          		
+	-0.5f,  -0.5f * float(sqrt(3)) / 3,      0.0f,  0.8f,  0.3f,  0.02f,
+	 0.5f,  -0.5f * float(sqrt(3)) / 3,      0.0f,  0.8f,  0.3f,  0.02f,
+	 0.0f,   0.5f * float(sqrt(3)) * 2 / 3,  0.0f,  1.0f,  0.6f,  0.32f,
+	-0.25f,  0.5f * float(sqrt(3)) / 6,      0.0f,  0.9f,  0.45f, 0.17f,
+	 0.25f,  0.5f * float(sqrt(3)) / 6,      0.0f,  0.9f,  0.45f, 0.17f,
+	 0.0f,  -0.5f * float(sqrt(3)) / 3,      0.0f,  0.8f,  0.3f,  0.02f
+};
+
+GLuint indices[] =
+{
+	0, 3, 5,
+	3, 2, 4,
+	5, 4 ,1
+};
+
 
 int main() {
 	// Initialize GLFW
@@ -28,13 +37,6 @@ int main() {
 
 	// Only use core profile of OpenGL (modern functions)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	// Just an array of vertex positions 
-	GLfloat vertices[] = {
-		-0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
-		0.5f, -0.5f * float(sqrt(3)) / 3, 0.0f,
-		0.0f, 0.5f * float(sqrt(3)) * 2 / 3, 0.0f
-	};
 
 	// Create a window object 800x800
 	GLFWwindow* window = glfwCreateWindow(800, 800, "ImpactFrames", NULL, NULL);
@@ -55,64 +57,25 @@ int main() {
 	// Set the GL window size to our above window
 	glViewport(0, 0, 800, 800);
 
-	// Define a reference to a vertexShader (all OpenGL objects are accessed by a handle (aka reference))
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	// Set the shader source of the above defined reference to our string at file start. The one is the amount of strings.
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	// Compile the shader into machine code before running.
-	glCompileShader(vertexShader);
+	// Create the shader program using the default.vert and default.frag files
+	Shader shaderProgram("default.vert", "default.frag");
 
-	// Same
-	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	glCompileShader(fragmentShader);
+	// Generate and Bind the Vertex Array Object
+	VAO VAO1;
+	VAO1.Bind();
 
-	// Define a reference to a Shader Program
-	GLuint shaderProgram = glCreateProgram();
+	// Generate the Vertex Buffer Object and the Element Buffer Object
+	VBO VBO1(vertices, sizeof(vertices));
+	EBO EBO1(indices, sizeof(indices));
 
-	// Attach both shaders to the program
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
+	// Link the VBO to the VAO
+	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6*sizeof(float), (void*)0);
+	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6*sizeof(float), (void*)(3*sizeof(float)));
 
-	// Link the program
-	glLinkProgram(shaderProgram);
-
-	// Once inserted into the program, shader references can be dumped
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-
-	// A buffer object is a chunk of data that is transmitted from the CPU to the GPU
-	// Define both Vertex Array object and Vertex Buffer object's references
-	GLuint VAO, VBO;
-
-	// VAO is always generated before the VBO as it has to hold a reference and info on how to interpret the VBO
-	// Generate the arrays and the buffers
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-
-	// Bind both the vertex array and vertex buffer so that next modifications will affect them
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-	// Set the buffer data to the above specified vertices
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	// Set the position of the vertices as the first attribute of such vertices
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	// Unbind VBO and VAO
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	// Set the clear background color of the viewport
-	glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-
-	// Clean the back buffer 
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	// Swap the buffers to render the color
-	glfwSwapBuffers(window);
+	// Unbind all the objects
+	VAO1.Unbind();
+	VBO1.Unbind();
+	EBO1.Unbind();
 
 	// Terminate the function only on closing the window
 	while (!glfwWindowShouldClose(window)) {
@@ -121,13 +84,13 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		// Enable the shader program
-		glUseProgram(shaderProgram);
+		shaderProgram.Activate();
 
 		// Bind the vertex array (unnecessary since we have only one object but hey)
-		glBindVertexArray(VAO);
+		VAO1.Bind();
 
 		// Draw the bound array(s)
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
 
 		// Swap buffers to render
 		glfwSwapBuffers(window);
@@ -136,9 +99,11 @@ int main() {
 		glfwPollEvents();
 	}
 
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteProgram(shaderProgram);
+	// Delete all the objects we've created
+	VAO1.Delete();
+	VBO1.Delete();
+	EBO1.Delete();
+	shaderProgram.Delete();
 
 	// Then destroy the window and terminate glfw.
 	glfwDestroyWindow(window);
