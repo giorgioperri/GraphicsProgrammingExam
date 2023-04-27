@@ -52,12 +52,35 @@ int main() {
 	glEnable(GL_STENCIL_TEST);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
+
 	Camera camera(SCR_WIDTH, SCR_HEIGHT, glm::vec3(0.0f, 0.3f, 1.3f));
 
 	Model model("models/destiny/hunter.gltf");
 
+	double prevTime = 0.0f;
+	double currTime = 0.0f;
+	double deltaTime = 0.0f;
+	unsigned int counter = 0;
+
 	// Terminate the function only on closing the window
 	while (!glfwWindowShouldClose(window)) {
+
+		currTime = glfwGetTime();
+		deltaTime = currTime - prevTime;
+		counter++;
+
+		if (deltaTime >= 1.0 / 30.0) {
+			std::string FPS = std::to_string((1.0 / deltaTime) * counter);
+			std::string ms = std::to_string((deltaTime / counter) * 1000.0);
+			std::string newTitle = "ImpactFrames | FPS: " + FPS + " | ms: " + ms;
+			glfwSetWindowTitle(window, newTitle.c_str());
+			prevTime = currTime;
+			counter = 0;
+		}
+
 		//Clean the background
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
