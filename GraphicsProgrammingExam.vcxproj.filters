@@ -45,12 +45,27 @@
     <ClCompile Include="texture.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.vert">
       <Filter>File di risorse\Shaders</Filter>
     </None>
     <None Include="default.frag">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
+    <None Include="light.frag">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
+    <None Include="light.vert">
       <Filter>File di risorse\Shaders</Filter>
     </None>
   </ItemGroup>
@@ -70,9 +85,27 @@
     <ClInclude Include="texture.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Main.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\Downloads\grassBlock.jpg">
+      <Filter>File di risorse\Textures</Filter>
+    </Image>
+    <Image Include="planks.png">
+      <Filter>File di risorse\Textures</Filter>
+    </Image>
+    <Image Include="planksSpec.png">
       <Filter>File di risorse\Textures</Filter>
     </Image>
   </ItemGroup>

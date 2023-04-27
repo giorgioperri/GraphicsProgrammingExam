@@ -1,2 +1,9 @@
 ﻿  Main.cpp
+  camera.cpp
+  mesh.cpp
+C:\Users\hello\Desktop\GraphicsProgrammingExam\mesh.cpp(73,65): warning C4267: 'argomento': conversione da 'size_t' a 'GLsizei'. Possibile perdita di dati.
+  model.cpp
+C:\Users\hello\Desktop\GraphicsProgrammingExam\model.cpp(262,93): warning C4267: 'argomento': conversione da 'size_t' a 'GLuint'. Possibile perdita di dati.
+C:\Users\hello\Desktop\GraphicsProgrammingExam\model.cpp(270,95): warning C4267: 'argomento': conversione da 'size_t' a 'GLuint'. Possibile perdita di dati.
+  Generazione del codice in corso...
   GraphicsProgrammingExam.vcxproj -> C:\Users\hello\Desktop\GraphicsProgrammingExam\x64\Debug\GraphicsProgrammingExam.exe
