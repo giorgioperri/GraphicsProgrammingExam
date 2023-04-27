@@ -93,6 +93,8 @@ void main(){
 	//FragColor = vec4(vec3(linearizeDepth(gl_FragCoord.z) / far), 1.0);
 
 	//Fog effect + directional light
-	float depth = logisticDepth(gl_FragCoord.z);
-	FragColor = directionalLight() * (1.0f - depth) + vec4(depth * vec3(0.07f, 0.13f, 0.17f), 1.0f);
+//	float depth = logisticDepth(gl_FragCoord.z);
+//	FragColor = directionalLight() * (1.0f - depth) + vec4(depth * vec3(0.07f, 0.13f, 0.17f), 1.0f);
+
+	FragColor = directionalLight();
 }

@@ -57,6 +57,9 @@
     <ClCompile Include="FBO.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
+    <ClCompile Include="screenQuad.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.vert">
@@ -113,6 +116,9 @@
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="FBO.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="screenQuad.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>

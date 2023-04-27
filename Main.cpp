@@ -1,20 +1,10 @@
 #include"model.h"
 #include"FBO.h"
+#include"screenQuad.h"
 #include "Main.h"
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 800;
-
-float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
-	// positions   // texCoords
-	-1.0f,  1.0f,  0.0f, 1.0f,
-	-1.0f, -1.0f,  0.0f, 0.0f,
-	 1.0f, -1.0f,  1.0f, 0.0f,
-
-	-1.0f,  1.0f,  0.0f, 1.0f,
-	 1.0f, -1.0f,  1.0f, 0.0f,
-	 1.0f,  1.0f,  1.0f, 1.0f
-};
 
 int main() {
 	// Initialize GLFW
@@ -48,9 +38,7 @@ int main() {
 
 	// Create the shader program using the default.vert and default.frag files
 	Shader shaderProgram("default.vert", "default.frag");
-
 	Shader outliningProgram("outline.vert", "outline.frag");
-
 	Shader framebufferProgram("framebuffer.vert", "framebuffer.frag");
 	glUniform1i(glGetUniformLocation(framebufferProgram.ID, "screenTexture"), 0);
 
@@ -75,25 +63,14 @@ int main() {
 
 	Model model("models/destiny/hunter.gltf");
 
+	Framebuffer postProcessingFBO = Framebuffer(SCR_WIDTH, SCR_HEIGHT);
+	ScreenQuad screenQuad = ScreenQuad();
+
 	double prevTime = 0.0f;
 	double currTime = 0.0f;
 	double deltaTime = 0.0f;
 	unsigned int counter = 0;
 
-	Framebuffer postProcessingFBO = Framebuffer(SCR_WIDTH, SCR_HEIGHT);
-
-	unsigned int quadVAO, quadVBO;
-	glGenVertexArrays(1, &quadVAO);
-	glGenBuffers(1, &quadVBO);
-	glBindVertexArray(quadVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-
-	// Terminate the function only on closing the window
 	while (!glfwWindowShouldClose(window)) {
 
 		currTime = glfwGetTime();
@@ -110,9 +87,6 @@ int main() {
 		}
 
 		postProcessingFBO.bind();
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-		glEnable(GL_DEPTH_TEST);
 
 		//Clean the background
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -124,15 +98,16 @@ int main() {
 
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilMask(0xFF);
-		model.Draw(shaderProgram, camera);
 
+		model.Draw(shaderProgram, camera);
+		
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 		glStencilMask(0x00);
 		glDisable(GL_DEPTH_TEST);
 
 		outliningProgram.Activate();
-		glUniform1f(glGetUniformLocation(outliningProgram.ID, "scale"), 0.05f);
-		glUniform1f(glGetUniformLocation(outliningProgram.ID, "outline"), 0.2f);
+		glUniform1f(glGetUniformLocation(outliningProgram.ID, "scale"), scale);
+		glUniform1f(glGetUniformLocation(outliningProgram.ID, "outline"), 0.1f);
 		model.Draw(outliningProgram, camera);
 
 		glStencilMask(0xFF);
@@ -141,14 +116,9 @@ int main() {
 
 		// second pass
 		postProcessingFBO.unbind();
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
 
 		framebufferProgram.Activate();
-		glBindVertexArray(quadVAO);
-		glDisable(GL_DEPTH_TEST);
-		glBindTexture(GL_TEXTURE_2D, postProcessingFBO.getColorAttachment());
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		screenQuad.draw(postProcessingFBO.getColorAttachment());
 
 		// Swap buffers to render
 		glfwSwapBuffers(window);
