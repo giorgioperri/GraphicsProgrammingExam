@@ -74,6 +74,12 @@
     <None Include="outline.frag">
       <Filter>File di risorse\Shaders</Filter>
     </None>
+    <None Include="framebuffer.frag">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
+    <None Include="framebuffer.vert">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shaderClass.h">
