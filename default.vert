@@ -19,7 +19,7 @@ uniform float scale;
 
 
 void main() {
-	currPos = vec3(model * translation * rotation * scale * vec4(aPos, 1.0f));
+	currPos = vec3(model * translation * -rotation * scale * vec4(aPos, 1.0f));
 
 	normal = aNormal;
 

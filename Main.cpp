@@ -48,9 +48,9 @@ int main() {
 
 	glEnable(GL_DEPTH_TEST);
 
-	Camera camera(SCR_WIDTH, SCR_HEIGHT, glm::vec3(0.0f, 0.0f, 2.0f));
+	Camera camera(SCR_WIDTH, SCR_HEIGHT, glm::vec3(0.0f, 0.3f, 1.3f));
 
-	Model model("models/wraith/wraith.gltf");
+	Model model("models/destiny/hunter.gltf");
 
 	// Terminate the function only on closing the window
 	while (!glfwWindowShouldClose(window)) {
