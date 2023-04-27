@@ -74,6 +74,25 @@ vec4 spotLight() {
     return (texture(diffuse0, texCoord) * (diffuse * intensity + ambient) + texture(specular0, texCoord).r * specular * intensity) * lightColor;
 }
 
+float near = 0.1f;
+float far = 20.0f;
+
+float linearizeDepth(float depth) {
+	return (2.0 * near * far) / (far + near - (depth * 2.0 - 1.0) * (far - near));
+}
+
+float logisticDepth(float depth) {
+	float steepness = 3;
+	float offset = 3;
+	float zVal = linearizeDepth(depth);
+	return (1 / (1 + exp(-steepness * (zVal - offset))));
+}
+
 void main(){
-    FragColor = directionalLight();
+    //FragColor = directionalLight();
+	//FragColor = vec4(vec3(linearizeDepth(gl_FragCoord.z) / far), 1.0);
+
+	//Fog effect + directional light
+	float depth = logisticDepth(gl_FragCoord.z);
+	FragColor = directionalLight() * (1.0f - depth) + vec4(depth * vec3(0.07f, 0.13f, 0.17f), 1.0f);
 }
