@@ -86,6 +86,12 @@ int main() {
 			glfwSetWindowTitle(window, newTitle.c_str());
 			prevTime = currTime;
 			counter = 0;
+
+			if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+				isImpacting = true;
+			} else {
+				isImpacting = false;
+			}
 		}
 
 		postProcessingFBO.bind();
@@ -107,12 +113,12 @@ int main() {
 		float randomOffsetZ = ((float)rand() / (float)RAND_MAX) * 0.3f - 0.1f;
 
 		shaderProgram.Activate();
-		if (counter == 0 && isImpacting) {
+		if (counter == 0 && isImpacting == true) {
 			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedX"), randomOffsetX);
 			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedY"), randomOffsetY);
 			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedZ"), randomOffsetZ);
 		}
-		else {
+		else if (counter == 0 && isImpacting == false){
 			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedX"), 0.0f);
 			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedY"), 0.0f);
 			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedZ"), 0.0f);
