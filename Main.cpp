@@ -6,6 +6,8 @@
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 800;
 
+bool isImpacting = false;
+
 int main() {
 	// Initialize GLFW
 	glfwInit();
@@ -77,7 +79,7 @@ int main() {
 		deltaTime = currTime - prevTime;
 		counter++;
 
-		if (deltaTime >= 1.0 / 30.0) {
+		if (deltaTime >= 1.0 / 25.0) {
 			std::string FPS = std::to_string((1.0 / deltaTime) * counter);
 			std::string ms = std::to_string((deltaTime / counter) * 1000.0);
 			std::string newTitle = "ImpactFrames | FPS: " + FPS + " | ms: " + ms;
@@ -99,6 +101,22 @@ int main() {
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilMask(0xFF);
 
+		//define a random value between -0.1 and 0.1
+		float randomOffsetX = ((float)rand() / (float)RAND_MAX) * 0.3f - 0.1f;
+		float randomOffsetY = ((float)rand() / (float)RAND_MAX) * 0.3f - 0.1f;
+		float randomOffsetZ = ((float)rand() / (float)RAND_MAX) * 0.3f - 0.1f;
+
+		shaderProgram.Activate();
+		if (counter == 0 && isImpacting) {
+			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedX"), randomOffsetX);
+			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedY"), randomOffsetY);
+			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedZ"), randomOffsetZ);
+		}
+		else {
+			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedX"), 0.0f);
+			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedY"), 0.0f);
+			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedZ"), 0.0f);
+		}
 		model.Draw(shaderProgram, camera);
 		
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
@@ -108,6 +126,7 @@ int main() {
 		outliningProgram.Activate();
 		glUniform1f(glGetUniformLocation(outliningProgram.ID, "scale"), scale);
 		glUniform1f(glGetUniformLocation(outliningProgram.ID, "outline"), 0.1f);
+		glUniform1f(glGetUniformLocation(outliningProgram.ID, "seed"), currTime);
 		model.Draw(outliningProgram, camera);
 
 		glStencilMask(0xFF);

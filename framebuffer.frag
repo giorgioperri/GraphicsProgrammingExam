@@ -21,29 +21,47 @@ float kernel[9] = float[] (
     1, 1, 1
 );
 
+vec4 kernelView() {
+    vec3 color = vec3(0.0);
+    for(int i = 0; i < 9; i++) {
+		color += vec3(texture(screenTexture, TexCoords.st + offsets[i])) * kernel[i];
+	}
+
+    return vec4(color, 1.0);
+}
+
+vec4 negativeKernelView() {
+	vec3 color = vec3(0.0);
+	for(int i = 0; i < 9; i++) {
+		color += vec3(texture(screenTexture, TexCoords.st + offsets[i])) * kernel[i];
+	}
+	return vec4(1.0f) - vec4(color, 1.0);
+}
+
+vec4 blurView() {
+	vec3 color = vec3(0.0);
+	for(int i = 0; i < 9; i++) {
+		color += vec3(texture(screenTexture, TexCoords.st + offsets[i]));
+	}
+	return vec4(color / 9.0, 1.0);
+}
+
+vec4 standardView() {
+	return texture(screenTexture, TexCoords);
+}
+
+vec4 grayscaleView() {
+	vec4 tex = texture(screenTexture, TexCoords);
+	float avg = (tex.r + tex.g + tex.b) / 3.0;
+	return vec4(avg, avg, avg, 1.0);
+}
+
+vec4 negativeView() {
+	return vec4(1.0f) - texture(screenTexture, TexCoords);
+}
+
 
 void main()
 { 
-    // Standard effect
-    FragColor = texture(screenTexture, TexCoords);
-    // Negative effect
-    //FragColor = vec4(1.0f) - texture(screenTexture, TexCoords);
-
-    // Grayscale
-    /*
-    vec4 tex = texture(screenTexture, TexCoords);
-    float avg = (tex.r + tex.g + tex.b) / 3.0;
-    FragColor = vec4(avg, avg, avg, 1.0);
-    */
-
-    //FragColor = texture(screenTexture, TexCoords);
-
-    // Edge finding kernel
-//    vec3 color = vec3(0.0);
-//    for(int i = 0; i < 9; i++)
-//	{
-//		color += vec3(texture(screenTexture, TexCoords.st + offsets[i])) * kernel[i];
-//	}
-//
-//    FragColor = vec4(color, 1.0);
+    FragColor = standardView();
 }

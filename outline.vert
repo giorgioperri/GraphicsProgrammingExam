@@ -9,6 +9,7 @@ uniform mat4 translation;
 uniform mat4 rotation;
 uniform float scale;
 uniform float outline;
+uniform float seed;
 
 vec3 mod289(vec3 x)
 {
@@ -188,12 +189,9 @@ float turbulence( vec3 p ) {
 
 }
 
-void main() {
-	vec3 currPos = vec3(model * translation * rotation * scale * vec4(aPos + aNormal * outline, 1.0));
-	//gl_Position = camMatrix * vec4(currPos, 1.0);
-
+vec4 seededBurstOutline(vec3 currPos) {
 	// get a turbulent 3d noise using the normal, normal to high freq
-	float noise = 7.0 *  -.10 * turbulence( 5.05 * aNormal ); // animate the 505
+	float noise = 7.0 *  -.10 * turbulence(seed * aNormal );
 
 	// get a 3d noise using the position, low frequency
 	float b = 1.0 * pnoise( 0.05 * aPos, vec3( 50.0 ) );
@@ -202,6 +200,16 @@ void main() {
 
 	// move the position along the normal and transform it
 	vec3 newPosition = currPos * displacement / 2;
-	gl_Position = camMatrix * vec4( newPosition, 1.0 );
+	return camMatrix * vec4( newPosition, 1.0 );
+}
 
+vec4 standardOutline(vec3 currPos) {
+	return camMatrix * vec4(currPos, 1.0);
+}
+
+void main() {
+	vec3 currPos = vec3(model * translation * rotation * scale * vec4(aPos + aNormal * outline, 1.0));
+	vec3 invertedRotationCurrPos = vec3(model * translation * -rotation * scale * vec4(aPos + aNormal * outline, 1.0));
+
+	gl_Position = standardOutline(invertedRotationCurrPos);
 }

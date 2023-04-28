@@ -1,4 +1,3 @@
 ﻿  Main.cpp
-glfw3.lib(monitor.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(monitor.obj)' o in ''; oggetto collegato senza informazioni di debug
-glfw3.lib(win32_joystick.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(win32_joystick.obj)' o in ''; oggetto collegato senza informazioni di debug
+C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(129,66): warning C4244: 'argomento': conversione da 'double' a 'GLfloat'. Possibile perdita di dati.
   GraphicsProgrammingExam.vcxproj -> C:\Users\hello\Desktop\GraphicsProgrammingExam\x64\Debug\GraphicsProgrammingExam.exe
