@@ -4,6 +4,9 @@ out vec4 FragColor;
 in vec2 TexCoords;
 
 uniform sampler2D screenTexture;
+uniform int isImpacting;
+uniform float barrelPower;
+uniform float iPressedTime;
 
 const float offset_x = 1.0f / 800.0f;
 const float offset_y = 1.0f / 800.0f;
@@ -16,9 +19,9 @@ vec2 offsets[9] = vec2[]
 );
 
 float kernel[9] = float[] (
-    1, 1, 1,
-    1, -8, 1,    
-    1, 1, 1
+    1,  1,  1,
+    1, -8,  1,    
+    1,  1,  1
 );
 
 vec4 kernelView() {
@@ -60,8 +63,40 @@ vec4 negativeView() {
 	return vec4(1.0f) - texture(screenTexture, TexCoords);
 }
 
+const float PI = 3.1415926535;
+
+vec2 Distort(vec2 p)
+{
+    float theta  = atan(p.y, p.x);
+    float radius = length(p);
+    radius = pow(radius, barrelPower * 2);
+    p.x = radius * cos(theta);
+    p.y = radius * sin(theta);
+    return 0.5 * (p + 1.0);
+}
+
+vec4 barrelDistort() {
+	vec2 xy = 2.0 * TexCoords - 1.0;
+	vec2 uv;
+	float d = length(xy);
+	if (d < 1.0)
+	{
+		uv = Distort(xy);
+	}
+	else
+	{
+		uv = TexCoords.xy;
+	}
+	vec4 c = texture2D(screenTexture, uv);
+
+	return c;
+}
 
 void main()
 { 
-    FragColor = standardView();
+	if (isImpacting == 0) {
+		FragColor = standardView();
+	} else {
+		FragColor = standardView() + barrelDistort();
+	}
 }

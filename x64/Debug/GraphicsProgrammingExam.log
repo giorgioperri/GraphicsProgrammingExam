@@ -1,3 +1,4 @@
 ﻿  Main.cpp
-C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(135,66): warning C4244: 'argomento': conversione da 'double' a 'GLfloat'. Possibile perdita di dati.
+C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(133,67): warning C4244: 'argomento': conversione da 'double' a 'GLfloat'. Possibile perdita di dati.
+C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(149,17): warning C4244: 'inizializzazione': conversione da 'double' a 'float'. Possibile perdita di dati.
   GraphicsProgrammingExam.vcxproj -> C:\Users\hello\Desktop\GraphicsProgrammingExam\x64\Debug\GraphicsProgrammingExam.exe

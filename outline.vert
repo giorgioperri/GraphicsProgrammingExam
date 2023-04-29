@@ -10,6 +10,7 @@ uniform mat4 rotation;
 uniform float scale;
 uniform float outline;
 uniform float seed;
+uniform int isImpacting;
 
 vec3 mod289(vec3 x)
 {
@@ -211,5 +212,11 @@ void main() {
 	vec3 currPos = vec3(model * translation * rotation * scale * vec4(aPos + aNormal * outline, 1.0));
 	vec3 invertedRotationCurrPos = vec3(model * translation * -rotation * scale * vec4(aPos + aNormal * outline, 1.0));
 
-	gl_Position = standardOutline(invertedRotationCurrPos);
+	if(isImpacting == 0) {
+		gl_Position = standardOutline(invertedRotationCurrPos);
+	} else {
+		//gl_Position = seededBurstOutline(currPos);
+		gl_Position = standardOutline(invertedRotationCurrPos);
+	}
+
 }

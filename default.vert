@@ -16,9 +16,7 @@ uniform mat4 model;
 uniform mat4 translation;
 uniform mat4 rotation;
 uniform float scale;
-uniform float seedX;
-uniform float seedY;
-uniform float seedZ;
+uniform vec3 randomOffset;
 
 vec3 mod289(vec3 x)
 {
@@ -206,7 +204,7 @@ float random (vec2 st) {
 }
 
 void main() {
-	currPos = vec3(model * translation * -rotation * scale * vec4(aPos.x + seedX, aPos.y + seedY, aPos.z + seedZ, 1.0f));
+	currPos = vec3(model * translation * -rotation * scale * vec4(aPos.x + randomOffset.x, aPos.y + randomOffset.y, aPos.z + randomOffset.z, 1.0f));
 
 	normal = aNormal;
 

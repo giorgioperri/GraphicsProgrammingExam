@@ -73,13 +73,15 @@ int main() {
 	double deltaTime = 0.0f;
 	unsigned int counter = 0;
 
+	double iPressedTime = 0.0f;
+
 	while (!glfwWindowShouldClose(window)) {
 
 		currTime = glfwGetTime();
 		deltaTime = currTime - prevTime;
 		counter++;
 
-		if (deltaTime >= 1.0 / 25.0) {
+		if (deltaTime >= 1.0 / 60.0) {
 			std::string FPS = std::to_string((1.0 / deltaTime) * counter);
 			std::string ms = std::to_string((deltaTime / counter) * 1000.0);
 			std::string newTitle = "ImpactFrames | FPS: " + FPS + " | ms: " + ms;
@@ -89,8 +91,10 @@ int main() {
 
 			if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
 				isImpacting = true;
+				iPressedTime += deltaTime;
 			} else {
 				isImpacting = false;
+				iPressedTime = 0.0f;
 			}
 		}
 
@@ -107,21 +111,14 @@ int main() {
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilMask(0xFF);
 
-		//define a random value between -0.1 and 0.1
-		float randomOffsetX = ((float)rand() / (float)RAND_MAX) * 0.3f - 0.1f;
-		float randomOffsetY = ((float)rand() / (float)RAND_MAX) * 0.3f - 0.1f;
-		float randomOffsetZ = ((float)rand() / (float)RAND_MAX) * 0.3f - 0.1f;
+		glm::vec3 randomOffset = glm::vec3(((float)rand() / (float)RAND_MAX) * 0.3f - 0.1f);
 
 		shaderProgram.Activate();
 		if (counter == 0 && isImpacting == true) {
-			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedX"), randomOffsetX);
-			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedY"), randomOffsetY);
-			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedZ"), randomOffsetZ);
+			glUniform3fv(glGetUniformLocation(shaderProgram.ID, "randomOffset"), 1, glm::value_ptr(randomOffset));
 		}
 		else if (counter == 0 && isImpacting == false){
-			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedX"), 0.0f);
-			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedY"), 0.0f);
-			glUniform1f(glGetUniformLocation(shaderProgram.ID, "seedZ"), 0.0f);
+			glUniform3fv(glGetUniformLocation(shaderProgram.ID, "randomOffset"), 1, glm::value_ptr(glm::vec3(0)));
 		}
 		model.Draw(shaderProgram, camera);
 		
@@ -131,8 +128,15 @@ int main() {
 
 		outliningProgram.Activate();
 		glUniform1f(glGetUniformLocation(outliningProgram.ID, "scale"), scale);
-		glUniform1f(glGetUniformLocation(outliningProgram.ID, "outline"), 0.1f);
-		glUniform1f(glGetUniformLocation(outliningProgram.ID, "seed"), currTime);
+		if (isImpacting == true) {
+			glUniform1f(glGetUniformLocation(outliningProgram.ID, "outline"), 0.1f);
+			glUniform1f(glGetUniformLocation(outliningProgram.ID, "seed"), currTime);
+			glUniform1i(glGetUniformLocation(outliningProgram.ID, "isImpacting"), 1);
+		}
+		else {
+			glUniform1f(glGetUniformLocation(outliningProgram.ID, "outline"), 0.0f);
+			glUniform1i(glGetUniformLocation(outliningProgram.ID, "isImpacting"), 0 );
+		}
 		model.Draw(outliningProgram, camera);
 
 		glStencilMask(0xFF);
@@ -142,7 +146,19 @@ int main() {
 		// second pass
 		postProcessingFBO.unbind();
 
+		float timeSin = glm::sin(( 0.2f + iPressedTime) * 2);
+		//clamp timeSin between 0 and 1
+		timeSin = glm::clamp(timeSin, 0.0f, 1.0f);
+
 		framebufferProgram.Activate();
+		if (isImpacting == true) {
+			glUniform1i(glGetUniformLocation(framebufferProgram.ID, "isImpacting"), 1);
+			glUniform1f(glGetUniformLocation(framebufferProgram.ID, "barrelPower"), timeSin);
+		}
+		else {
+			glUniform1i(glGetUniformLocation(framebufferProgram.ID, "isImpacting"), 0);
+			glUniform1f(glGetUniformLocation(framebufferProgram.ID, "barrelPower"), 0);
+		}
 		screenQuad.draw(postProcessingFBO.getColorAttachment());
 
 		// Swap buffers to render
