@@ -99,7 +99,11 @@ vec4 barrelDistort(bool seeded = true) {
 void main()
 { 
 	if(iPressTime > 1.35f && isImpacting == 1) {
-		FragColor = negativeView() / (negativeKernelView() - barrelDistort(false));
+		//FragColor = kernelView() * (barrelDistort() * negativeView());
+		FragColor = (negativeView() - standardView()) * kernelView() + barrelDistort() - negativeView();
+		//FragColor = (negativeView() - standardView()) * kernelView() + barrelDistort() +  negativeView();
+		//FragColor = (kernelView() / (negativeKernelView() - (barrelDistort() / negativeView())));
+		//FragColor = (kernelView() / (negativeKernelView() - (barrelDistort() + negativeView())));
 		//FragColor = negativeView() / (negativeKernelView() * barrelDistort());
 		return;
 	} 
