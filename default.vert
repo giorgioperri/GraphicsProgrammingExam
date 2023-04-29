@@ -17,6 +17,7 @@ uniform mat4 translation;
 uniform mat4 rotation;
 uniform float scale;
 uniform vec3 randomOffset;
+uniform float iPressTime;
 
 vec3 mod289(vec3 x)
 {
@@ -204,7 +205,11 @@ float random (vec2 st) {
 }
 
 void main() {
-	currPos = vec3(model * translation * -rotation * scale * vec4(aPos.x + randomOffset.x, aPos.y + randomOffset.y, aPos.z + randomOffset.z, 1.0f));
+	if(iPressTime > 1.35f) {
+		currPos = vec3(model * translation * -rotation * scale * vec4(aPos.x + randomOffset.x, aPos.y + randomOffset.y, aPos.z + randomOffset.z, 1.0f));
+	} else {
+		currPos = vec3(model * translation * -rotation * scale * vec4(aPos.x, aPos.y, aPos.z, 1.0f));
+	}
 
 	normal = aNormal;
 

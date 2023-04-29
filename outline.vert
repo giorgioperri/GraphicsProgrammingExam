@@ -11,6 +11,7 @@ uniform float scale;
 uniform float outline;
 uniform float seed;
 uniform int isImpacting;
+uniform float iPressTime;
 
 vec3 mod289(vec3 x)
 {
@@ -212,11 +213,10 @@ void main() {
 	vec3 currPos = vec3(model * translation * rotation * scale * vec4(aPos + aNormal * outline, 1.0));
 	vec3 invertedRotationCurrPos = vec3(model * translation * -rotation * scale * vec4(aPos + aNormal * outline, 1.0));
 
-	if(isImpacting == 0) {
-		gl_Position = standardOutline(invertedRotationCurrPos);
-	} else {
-		//gl_Position = seededBurstOutline(currPos);
-		gl_Position = standardOutline(invertedRotationCurrPos);
+	if(iPressTime > 1.35f) {
+		gl_Position = seededBurstOutline(currPos);
+		return;
 	}
-
+	
+	gl_Position = standardOutline(invertedRotationCurrPos);
 }

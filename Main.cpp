@@ -101,7 +101,7 @@ int main() {
 		postProcessingFBO.bind();
 
 		//Clean the background
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 
@@ -120,6 +120,12 @@ int main() {
 		else if (counter == 0 && isImpacting == false){
 			glUniform3fv(glGetUniformLocation(shaderProgram.ID, "randomOffset"), 1, glm::value_ptr(glm::vec3(0)));
 		}
+		if (isImpacting == true) {
+			glUniform1f(glGetUniformLocation(shaderProgram.ID, "iPressTime"), iPressedTime);
+		}
+		else {
+			glUniform1f(glGetUniformLocation(shaderProgram.ID, "iPressTime"), 0.0f);
+		}
 		model.Draw(shaderProgram, camera);
 		
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
@@ -131,11 +137,13 @@ int main() {
 		if (isImpacting == true) {
 			glUniform1f(glGetUniformLocation(outliningProgram.ID, "outline"), 0.1f);
 			glUniform1f(glGetUniformLocation(outliningProgram.ID, "seed"), currTime);
+			glUniform1f(glGetUniformLocation(outliningProgram.ID, "iPressTime"), iPressedTime);
 			glUniform1i(glGetUniformLocation(outliningProgram.ID, "isImpacting"), 1);
 		}
 		else {
 			glUniform1f(glGetUniformLocation(outliningProgram.ID, "outline"), 0.0f);
 			glUniform1i(glGetUniformLocation(outliningProgram.ID, "isImpacting"), 0 );
+			glUniform1f(glGetUniformLocation(outliningProgram.ID, "iPressTime"), 0);
 		}
 		model.Draw(outliningProgram, camera);
 
@@ -154,10 +162,12 @@ int main() {
 		if (isImpacting == true) {
 			glUniform1i(glGetUniformLocation(framebufferProgram.ID, "isImpacting"), 1);
 			glUniform1f(glGetUniformLocation(framebufferProgram.ID, "barrelPower"), timeSin);
+			glUniform1f(glGetUniformLocation(framebufferProgram.ID, "iPressTime"), iPressedTime);
 		}
 		else {
 			glUniform1i(glGetUniformLocation(framebufferProgram.ID, "isImpacting"), 0);
 			glUniform1f(glGetUniformLocation(framebufferProgram.ID, "barrelPower"), 0);
+			glUniform1f(glGetUniformLocation(framebufferProgram.ID, "iPressTime"), 0);
 		}
 		screenQuad.draw(postProcessingFBO.getColorAttachment());
 

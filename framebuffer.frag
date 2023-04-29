@@ -6,7 +6,7 @@ in vec2 TexCoords;
 uniform sampler2D screenTexture;
 uniform int isImpacting;
 uniform float barrelPower;
-uniform float iPressedTime;
+uniform float iPressTime;
 
 const float offset_x = 1.0f / 800.0f;
 const float offset_y = 1.0f / 800.0f;
@@ -65,23 +65,27 @@ vec4 negativeView() {
 
 const float PI = 3.1415926535;
 
-vec2 Distort(vec2 p)
+vec2 Distort(vec2 p, bool seeded = true)
 {
     float theta  = atan(p.y, p.x);
     float radius = length(p);
-    radius = pow(radius, barrelPower * 2);
+	if(seeded) {
+		radius = pow(radius, barrelPower * 2);
+	} else {
+		radius = pow(radius, 0);
+	}
     p.x = radius * cos(theta);
     p.y = radius * sin(theta);
     return 0.5 * (p + 1.0);
 }
 
-vec4 barrelDistort() {
+vec4 barrelDistort(bool seeded = true) {
 	vec2 xy = 2.0 * TexCoords - 1.0;
 	vec2 uv;
 	float d = length(xy);
 	if (d < 1.0)
 	{
-		uv = Distort(xy);
+		uv = Distort(xy, seeded);
 	}
 	else
 	{
@@ -94,9 +98,16 @@ vec4 barrelDistort() {
 
 void main()
 { 
-	if (isImpacting == 0) {
-		FragColor = standardView();
-	} else {
+	if(iPressTime > 1.35f && isImpacting == 1) {
+		FragColor = negativeView() / (negativeKernelView() - barrelDistort(false));
+		//FragColor = negativeView() / (negativeKernelView() * barrelDistort());
+		return;
+	} 
+	
+	if (isImpacting == 1){
 		FragColor = standardView() + barrelDistort();
+		return;
 	}
+	 
+	FragColor = standardView();
 }
