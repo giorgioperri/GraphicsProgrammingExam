@@ -1,3 +1,7 @@
+#include"imgui.h"
+#include"imgui_impl_glfw.h"
+#include"imgui_impl_opengl3.h"
+
 #include"model.h"
 #include"FBO.h"
 #include"screenQuad.h"
@@ -75,6 +79,13 @@ int main() {
 
 	double iPressedTime = 0.0f;
 
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 330");
+
 	while (!glfwWindowShouldClose(window)) {
 
 		currTime = glfwGetTime();
@@ -103,9 +114,17 @@ int main() {
 		//Clean the background
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		if (!io.WantCaptureMouse) {
+			camera.Inputs(window);
+		}
+
 		glEnable(GL_DEPTH_TEST);
 
-		camera.Inputs(window);
 		camera.updateMatrix(45.0f, 0.1f, 100.0f);
 
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
@@ -171,12 +190,23 @@ int main() {
 		}
 		screenQuad.draw(postProcessingFBO.getColorAttachment());
 
+		ImGui::Begin("Impact Settings");
+		ImGui::SliderFloat("Scale", &scale, 0.0f, 1.0f);
+		ImGui::End();
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		// Swap buffers to render
 		glfwSwapBuffers(window);
 
 		// Take care of GLFW events
 		glfwPollEvents();
 	}
+
+	ImGui_ImplGlfw_Shutdown();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui::DestroyContext();
 
 	// Delete all the objects we've created
 	shaderProgram.Delete();

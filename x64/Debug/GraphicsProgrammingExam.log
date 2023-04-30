@@ -1,23 +1,7 @@
 ﻿  Main.cpp
-C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(124,70): warning C4244: 'argomento': conversione da 'double' a 'GLfloat'. Possibile perdita di dati.
-C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(139,67): warning C4244: 'argomento': conversione da 'double' a 'GLfloat'. Possibile perdita di dati.
-C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(140,73): warning C4244: 'argomento': conversione da 'double' a 'GLfloat'. Possibile perdita di dati.
-C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(157,17): warning C4244: 'inizializzazione': conversione da 'double' a 'float'. Possibile perdita di dati.
-C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(165,75): warning C4244: 'argomento': conversione da 'double' a 'GLfloat'. Possibile perdita di dati.
-  LINK : C:\Users\hello\Desktop\GraphicsProgrammingExam\x64\Debug\GraphicsProgrammingExam.exe non trovato o non compilato dall'ultimo collegamento incrementale; verrà eseguito il collegamento completo
-glfw3.lib(input.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(input.obj)' o in ''; oggetto collegato senza informazioni di debug
-glfw3.lib(init.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(init.obj)' o in ''; oggetto collegato senza informazioni di debug
-glfw3.lib(window.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(window.obj)' o in ''; oggetto collegato senza informazioni di debug
-glfw3.lib(context.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(context.obj)' o in ''; oggetto collegato senza informazioni di debug
-glfw3.lib(win32_window.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(win32_window.obj)' o in ''; oggetto collegato senza informazioni di debug
-glfw3.lib(win32_joystick.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(win32_joystick.obj)' o in ''; oggetto collegato senza informazioni di debug
-glfw3.lib(win32_time.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(win32_time.obj)' o in ''; oggetto collegato senza informazioni di debug
-glfw3.lib(win32_init.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(win32_init.obj)' o in ''; oggetto collegato senza informazioni di debug
-glfw3.lib(win32_monitor.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(win32_monitor.obj)' o in ''; oggetto collegato senza informazioni di debug
-glfw3.lib(win32_thread.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(win32_thread.obj)' o in ''; oggetto collegato senza informazioni di debug
-glfw3.lib(monitor.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(monitor.obj)' o in ''; oggetto collegato senza informazioni di debug
-glfw3.lib(vulkan.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(vulkan.obj)' o in ''; oggetto collegato senza informazioni di debug
-glfw3.lib(wgl_context.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(wgl_context.obj)' o in ''; oggetto collegato senza informazioni di debug
-glfw3.lib(egl_context.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(egl_context.obj)' o in ''; oggetto collegato senza informazioni di debug
-glfw3.lib(osmesa_context.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(osmesa_context.obj)' o in ''; oggetto collegato senza informazioni di debug
+C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(143,70): warning C4244: 'argomento': conversione da 'double' a 'GLfloat'. Possibile perdita di dati.
+C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(158,67): warning C4244: 'argomento': conversione da 'double' a 'GLfloat'. Possibile perdita di dati.
+C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(159,73): warning C4244: 'argomento': conversione da 'double' a 'GLfloat'. Possibile perdita di dati.
+C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(176,17): warning C4244: 'inizializzazione': conversione da 'double' a 'float'. Possibile perdita di dati.
+C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(184,75): warning C4244: 'argomento': conversione da 'double' a 'GLfloat'. Possibile perdita di dati.
   GraphicsProgrammingExam.vcxproj -> C:\Users\hello\Desktop\GraphicsProgrammingExam\x64\Debug\GraphicsProgrammingExam.exe
