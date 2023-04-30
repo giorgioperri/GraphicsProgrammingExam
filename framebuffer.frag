@@ -7,6 +7,7 @@ uniform sampler2D screenTexture;
 uniform int isImpacting;
 uniform float barrelPower;
 uniform float iPressTime;
+uniform int effectType;
 
 const float offset_x = 1.0f / 800.0f;
 const float offset_y = 1.0f / 800.0f;
@@ -96,15 +97,27 @@ vec4 barrelDistort(bool seeded = true) {
 	return c;
 }
 
+vec4 getColor() {
+	switch(effectType) {
+		case 0:
+			return (negativeView() - standardView()) * kernelView() + barrelDistort() - negativeView();
+		case 1:
+			return kernelView() * (barrelDistort() * negativeView());
+		case 2:
+			return (negativeView() - standardView()) * kernelView() + barrelDistort() +  negativeView();
+		case 3:
+			return (kernelView() / (negativeKernelView() - (barrelDistort() / negativeView())));
+		case 4:
+			return (kernelView() / (negativeKernelView() - (barrelDistort() + negativeView())));
+		case 5:
+			return negativeView() / (negativeKernelView() * barrelDistort());
+	}
+}
+
 void main()
 { 
 	if(iPressTime > 1.35f && isImpacting == 1) {
-		//FragColor = kernelView() * (barrelDistort() * negativeView());
-		FragColor = (negativeView() - standardView()) * kernelView() + barrelDistort() - negativeView();
-		//FragColor = (negativeView() - standardView()) * kernelView() + barrelDistort() +  negativeView();
-		//FragColor = (kernelView() / (negativeKernelView() - (barrelDistort() / negativeView())));
-		//FragColor = (kernelView() / (negativeKernelView() - (barrelDistort() + negativeView())));
-		//FragColor = negativeView() / (negativeKernelView() * barrelDistort());
+		FragColor = getColor();
 		return;
 	} 
 	

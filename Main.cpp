@@ -12,6 +12,13 @@ const unsigned int SCR_HEIGHT = 800;
 
 bool isImpacting = false;
 
+float RandomFloat(float a, float b) {
+	float random = ((float)rand()) / (float)RAND_MAX;
+	float diff = b - a;
+	float r = random * diff;
+	return a + r;
+}
+
 int main() {
 	// Initialize GLFW
 	glfwInit();
@@ -51,6 +58,7 @@ int main() {
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
 	GLfloat scale = 0.05f;
+	GLint effectType = 0;
 
 	shaderProgram.Activate();
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
@@ -79,6 +87,11 @@ int main() {
 
 	double iPressedTime = 0.0f;
 
+	float randMin = 0;
+	float randMax = 1;
+
+	bool simulateIpress = false;
+
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -100,7 +113,7 @@ int main() {
 			prevTime = currTime;
 			counter = 0;
 
-			if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
+			if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS || simulateIpress) {
 				isImpacting = true;
 				iPressedTime += deltaTime;
 			} else {
@@ -130,7 +143,13 @@ int main() {
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilMask(0xFF);
 
-		glm::vec3 randomOffset = glm::vec3(((float)rand() / (float)RAND_MAX) * 0.3f - 0.1f);
+		// define a vector that returns a value between two set variables
+
+		glm::vec3 randomOffset = glm::vec3(
+			RandomFloat(randMin, randMax),
+			RandomFloat(randMin, randMax),
+			RandomFloat(randMin, randMax)
+		);
 
 		shaderProgram.Activate();
 		if (counter == 0 && isImpacting == true) {
@@ -178,6 +197,7 @@ int main() {
 		timeSin = glm::clamp(timeSin, 0.0f, 1.0f);
 
 		framebufferProgram.Activate();
+		glUniform1i(glGetUniformLocation(framebufferProgram.ID, "effectType"), effectType);
 		if (isImpacting == true) {
 			glUniform1i(glGetUniformLocation(framebufferProgram.ID, "isImpacting"), 1);
 			glUniform1f(glGetUniformLocation(framebufferProgram.ID, "barrelPower"), timeSin);
@@ -191,7 +211,11 @@ int main() {
 		screenQuad.draw(postProcessingFBO.getColorAttachment());
 
 		ImGui::Begin("Impact Settings");
-		ImGui::SliderFloat("Scale", &scale, 0.0f, 1.0f);
+		ImGui::SliderInt("Effect type", &effectType, 0, 5);
+		ImGui::SliderFloat("Outline Scale", &scale, 0.0f, 0.07f);
+		ImGui::SliderFloat("Screen Shake Amount", &randMax, 0.0f, 2.0f);
+		ImGui::Checkbox("Simulate", &simulateIpress);
+
 		ImGui::End();
 
 		ImGui::Render();
