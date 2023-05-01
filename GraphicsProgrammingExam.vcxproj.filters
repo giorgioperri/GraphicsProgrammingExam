@@ -113,6 +113,12 @@
     <None Include="framebuffer.vert">
       <Filter>File di risorse\Shaders</Filter>
     </None>
+    <None Include="blur.vert">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
+    <None Include="blur.frag">
+      <Filter>File di risorse\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shaderClass.h">

@@ -9,6 +9,7 @@ uniform float barrelPower;
 uniform float iPressTime;
 uniform int effectType;
 uniform float gamma;
+uniform float exposure;
 
 const float offset_x = 1.0f / 800.0f;
 const float offset_y = 1.0f / 800.0f;
@@ -99,34 +100,38 @@ vec4 barrelDistort(bool seeded = true) {
 }
 
 vec4 getColor() {
-	switch(effectType) {
-		case 0:
-			return (negativeView() - standardView()) * kernelView() + barrelDistort() - negativeView();
-		case 1:
-			return kernelView() * (barrelDistort() * negativeView());
-		case 2:
-			return (negativeView() - standardView()) * kernelView() + barrelDistort() +  negativeView();
-		case 3:
-			return (kernelView() / (negativeKernelView() - (barrelDistort() / negativeView())));
-		case 4:
-			return (kernelView() / (negativeKernelView() - (barrelDistort() + negativeView())));
-		case 5:
-			return negativeView() / (negativeKernelView() * barrelDistort());
+	if(iPressTime > 1.35f && isImpacting == 1) {
+		switch(effectType) {
+			case 0:
+				return (negativeView() - standardView()) * kernelView() + barrelDistort() - negativeView();
+			case 1:
+				return kernelView() * (barrelDistort() * negativeView());
+			case 2:
+				return (negativeView() - standardView()) * kernelView() + barrelDistort() +  negativeView();
+			case 3:
+				return (kernelView() / (negativeKernelView() - (barrelDistort() / negativeView())));
+			case 4:
+				return (kernelView() / (negativeKernelView() - (barrelDistort() + negativeView())));
+			case 5:
+				return negativeView() / (negativeKernelView() * barrelDistort());
+		}
 	}
+
+	if (isImpacting == 1){
+		return standardView() + barrelDistort();
+	}
+
+	return standardView();
+}
+
+vec3 elevateFragToGamma(vec3 frag) {
+	return pow(frag.rgb, vec3(1.0 / gamma));
 }
 
 void main()
 { 
-
-	if(iPressTime > 1.35f && isImpacting == 1) {
-		FragColor.rgb = pow(getColor().rgb, vec3(1.0 / gamma));
-		return;
-	} 
-	
-	if (isImpacting == 1){
-		FragColor.rgb = pow(standardView().rgb + barrelDistort().rgb, vec3(1.0 / gamma));
-		return;
-	}
+	vec3 fragment = getColor().rgb;
+	vec3 toneMapped = vec3(1.0) - exp(-fragment * exposure);
 	 
-	FragColor.rgb = pow(standardView().rgb, vec3(1.0 / gamma));
+	FragColor.rgb = elevateFragToGamma(toneMapped);
 }

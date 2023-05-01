@@ -13,6 +13,7 @@ const unsigned int SCR_HEIGHT = 800;
 bool isImpacting = false;
 
 float gamma = 2.2f;
+float exposure = 1.0f;
 
 float RandomFloat(float a, float b) {
 	float random = ((float)rand()) / (float)RAND_MAX;
@@ -55,6 +56,8 @@ int main() {
 	Shader shaderProgram("default.vert", "default.frag");
 	Shader outliningProgram("outline.vert", "outline.frag");
 	Shader framebufferProgram("framebuffer.vert", "framebuffer.frag");
+
+	framebufferProgram.Activate();
 	glUniform1i(glGetUniformLocation(framebufferProgram.ID, "screenTexture"), 0);
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -201,6 +204,7 @@ int main() {
 		framebufferProgram.Activate();
 		glUniform1i(glGetUniformLocation(framebufferProgram.ID, "effectType"), effectType);
 		glUniform1f(glGetUniformLocation(framebufferProgram.ID, "gamma"), gamma);
+		glUniform1f(glGetUniformLocation(framebufferProgram.ID, "exposure"), exposure);
 		if (isImpacting == true) {
 			glUniform1i(glGetUniformLocation(framebufferProgram.ID, "isImpacting"), 1);
 			glUniform1f(glGetUniformLocation(framebufferProgram.ID, "barrelPower"), timeSin);
@@ -217,6 +221,7 @@ int main() {
 		ImGui::SliderInt("Effect type", &effectType, 0, 5);
 		ImGui::SliderFloat("Outline Scale", &scale, 0.0f, 0.07f);
 		ImGui::SliderFloat("Screen Shake Amount", &randMax, 0.0f, 2.0f);
+		ImGui::SliderFloat("Exposure", &exposure, 0.0f, 10.0f);
 		ImGui::Checkbox("Simulate", &simulateIpress);
 
 		ImGui::End();

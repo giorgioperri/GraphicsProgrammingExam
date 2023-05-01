@@ -1,2 +1,9 @@
-﻿  FBO.cpp
+﻿  Main.cpp
+C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(167,70): warning C4244: 'argomento': conversione da 'double' a 'GLfloat'. Possibile perdita di dati.
+C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(182,67): warning C4244: 'argomento': conversione da 'double' a 'GLfloat'. Possibile perdita di dati.
+C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(183,73): warning C4244: 'argomento': conversione da 'double' a 'GLfloat'. Possibile perdita di dati.
+C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(200,17): warning C4244: 'inizializzazione': conversione da 'double' a 'float'. Possibile perdita di dati.
+C:\Users\hello\Desktop\GraphicsProgrammingExam\Main.cpp(211,75): warning C4244: 'argomento': conversione da 'double' a 'GLfloat'. Possibile perdita di dati.
+glfw3.lib(input.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(input.obj)' o in ''; oggetto collegato senza informazioni di debug
+glfw3.lib(win32_window.obj) : warning LNK4099: impossibile trovare il PDB '' con 'glfw3.lib(win32_window.obj)' o in ''; oggetto collegato senza informazioni di debug
   GraphicsProgrammingExam.vcxproj -> C:\Users\hello\Desktop\GraphicsProgrammingExam\x64\Debug\GraphicsProgrammingExam.exe

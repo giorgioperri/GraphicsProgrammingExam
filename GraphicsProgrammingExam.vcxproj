@@ -161,6 +161,8 @@
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="blur.frag" />
+    <None Include="blur.vert" />
     <None Include="default.frag" />
     <None Include="default.vert" />
     <None Include="framebuffer.frag" />
