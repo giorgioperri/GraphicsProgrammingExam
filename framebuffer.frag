@@ -8,6 +8,7 @@ uniform int isImpacting;
 uniform float barrelPower;
 uniform float iPressTime;
 uniform int effectType;
+uniform float gamma;
 
 const float offset_x = 1.0f / 800.0f;
 const float offset_y = 1.0f / 800.0f;
@@ -116,15 +117,16 @@ vec4 getColor() {
 
 void main()
 { 
+
 	if(iPressTime > 1.35f && isImpacting == 1) {
-		FragColor = getColor();
+		FragColor.rgb = pow(getColor().rgb, vec3(1.0 / gamma));
 		return;
 	} 
 	
 	if (isImpacting == 1){
-		FragColor = standardView() + barrelDistort();
+		FragColor.rgb = pow(standardView().rgb + barrelDistort().rgb, vec3(1.0 / gamma));
 		return;
 	}
 	 
-	FragColor = standardView();
+	FragColor.rgb = pow(standardView().rgb, vec3(1.0 / gamma));
 }

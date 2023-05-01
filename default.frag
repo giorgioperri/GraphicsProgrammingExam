@@ -43,11 +43,20 @@ vec4 directionalLight() {
 	vec3 lightDirection = normalize(vec3(1.0, 1.0, 1.0));
 	float diffuse = max(dot(normal, lightDirection), 0.0);
 
-	float specularLight = 0.50f;
-	vec3 viewDirection = normalize(camPos - currPos);
-	vec3 reflectDirection = reflect(-lightDirection, normal);
-	float specAmount = pow(max(dot(viewDirection, reflectDirection), 0.0), 16);
-	float specular = specularLight * specAmount;
+	float specular = 0.0f;
+
+	if(diffuse != 0.0f) {
+
+		float specularLight = 0.50f;
+		vec3 viewDirection = normalize(camPos - currPos);
+		vec3 reflectDirection = reflect(-lightDirection, normal);
+
+		vec3 halfwayVec = normalize(lightDirection + viewDirection);
+
+		float specAmount = pow(max(dot(normal, halfwayVec), 0.0), 16);
+	
+		specular = specularLight * specAmount;
+	}
 	
 	return (texture(diffuse0, texCoord) * (diffuse + ambient) + texture(specular0, texCoord).r * specular) * lightColor;
 }
@@ -89,12 +98,5 @@ float logisticDepth(float depth) {
 }
 
 void main(){
-    //FragColor = directionalLight();
-	//FragColor = vec4(vec3(linearizeDepth(gl_FragCoord.z) / far), 1.0);
-
-	//Fog effect + directional light
-//	float depth = logisticDepth(gl_FragCoord.z);
-//	FragColor = directionalLight() * (1.0f - depth) + vec4(depth * vec3(0.07f, 0.13f, 0.17f), 1.0f);
-
 	FragColor = directionalLight();
 }

@@ -12,6 +12,8 @@ const unsigned int SCR_HEIGHT = 800;
 
 bool isImpacting = false;
 
+float gamma = 2.2f;
+
 float RandomFloat(float a, float b) {
 	float random = ((float)rand()) / (float)RAND_MAX;
 	float diff = b - a;
@@ -198,6 +200,7 @@ int main() {
 
 		framebufferProgram.Activate();
 		glUniform1i(glGetUniformLocation(framebufferProgram.ID, "effectType"), effectType);
+		glUniform1f(glGetUniformLocation(framebufferProgram.ID, "gamma"), gamma);
 		if (isImpacting == true) {
 			glUniform1i(glGetUniformLocation(framebufferProgram.ID, "isImpacting"), 1);
 			glUniform1f(glGetUniformLocation(framebufferProgram.ID, "barrelPower"), timeSin);
